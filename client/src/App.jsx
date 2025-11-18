@@ -11,7 +11,7 @@ function App() {
   }, []);
 
   const loadUsers = () => {
-    axios.get("http://localhost:8081/api/users").then((res) => setUsers(res.data));
+    axios.get("http://localhost:8081/sgu-api/users").then((res) => setUsers(res.data));
   };
 
   const handleSubmit = (e) => {
@@ -19,13 +19,13 @@ function App() {
 
     if (editingId === null) {
       // CREATE
-      axios.post("http://localhost:8081/api/users", form).then(() => {
+      axios.post("http://localhost:8081/sgu-api/users", form).then(() => {
         loadUsers();
         setForm({ nombre: "", correo: "", telefono: "" });
       });
     } else {
       // UPDATE
-      axios.put(`http://localhost:8081/api/users/${editingId}`, form).then(() => {
+      axios.put(`http://localhost:8081/sgu-api/users/${editingId}`, form).then(() => {
         loadUsers();
         setEditingId(null);
         setForm({ nombre: "", correo: "", telefono: "" });
@@ -34,7 +34,7 @@ function App() {
   };
 
   const deleteUser = (id) => {
-    axios.delete(`http://localhost:8081/api/users/${id}`).then(() => loadUsers());
+    axios.delete(`http://localhost:8081/sgu-api/users/${id}`).then(() => loadUsers());
   };
 
   const editUser = (user) => {
