@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const ENV = import.meta.env;
+
+const API_URL = `${ENV.VITE_API_PROTOCOL}://${ENV.VITE_API_HOST}:${ENV.VITE_API_PORT}${ENV.VITE_API_BASE}`;
+
 function App() {
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ nombre: "", correo: "", telefono: "" });
@@ -11,7 +15,7 @@ function App() {
   }, []);
 
   const loadUsers = () => {
-    axios.get("http://localhost:8081/sgu-api/users").then((res) => setUsers(res.data));
+    axios.get(`${API_URL}/users`).then((res) => setUsers(res.data));
   };
 
   const handleSubmit = (e) => {
@@ -19,13 +23,13 @@ function App() {
 
     if (editingId === null) {
       // CREATE
-      axios.post("http://localhost:8081/sgu-api/users", form).then(() => {
+      axios.post(`${API_URL}/users`, form).then(() => {
         loadUsers();
         setForm({ nombre: "", correo: "", telefono: "" });
       });
     } else {
       // UPDATE
-      axios.put(`http://localhost:8081/sgu-api/users/${editingId}`, form).then(() => {
+      axios.put(`${API_URL}/users/${editingId}`, form).then(() => {
         loadUsers();
         setEditingId(null);
         setForm({ nombre: "", correo: "", telefono: "" });
@@ -34,7 +38,7 @@ function App() {
   };
 
   const deleteUser = (id) => {
-    axios.delete(`http://localhost:8081/sgu-api/users/${id}`).then(() => loadUsers());
+    axios.delete(`${API_URL}/users/${id}`).then(() => loadUsers());
   };
 
   const editUser = (user) => {
@@ -65,6 +69,7 @@ function App() {
         <input
           placeholder="Nombre"
           value={form.nombre}
+          onChange={(e) => setForm({ ...form, nombre: e.target.value })}
           style={{
             padding: "8px 12px",
             fontSize: 14,
@@ -72,11 +77,11 @@ function App() {
             border: "1px solid #ddd",
             outline: "none",
           }}
-          onChange={(e) => setForm({ ...form, nombre: e.target.value })}
         />
         <input
           placeholder="Correo"
           value={form.correo}
+          onChange={(e) => setForm({ ...form, correo: e.target.value })}
           style={{
             padding: "8px 12px",
             fontSize: 14,
@@ -84,11 +89,11 @@ function App() {
             border: "1px solid #ddd",
             outline: "none",
           }}
-          onChange={(e) => setForm({ ...form, correo: e.target.value })}
         />
         <input
           placeholder="Teléfono"
           value={form.telefono}
+          onChange={(e) => setForm({ ...form, telefono: e.target.value })}
           style={{
             padding: "8px 12px",
             fontSize: 14,
@@ -96,7 +101,6 @@ function App() {
             border: "1px solid #ddd",
             outline: "none",
           }}
-          onChange={(e) => setForm({ ...form, telefono: e.target.value })}
         />
 
         <button
@@ -113,7 +117,6 @@ function App() {
         >
           Guardar
         </button>
-
       </form>
 
       <table
